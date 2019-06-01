@@ -1,0 +1,124 @@
+<head>
+<title> cuuuu </title>
+<style>
+    #zdog {
+      background: #60bdaf;
+      cursor: move;
+    }
+
+   * {
+        margin: 0;
+        border: 0;
+    }
+</style>
+<script src="zdog.dist.js"></script>
+</head>
+
+<body>
+<canvas id="zdog" width="420" height="420"></canvas>
+
+<script type="text/javascript" >
+document.getElementById("zdog").width = window.innerWidth
+document.getElementById("zdog").height = window.innerHeight
+
+var strokecolor = "#a1d8b1"
+
+let illo = new Zdog.Illustration({
+  element: '#zdog',
+  dragRotate: true,
+  zoom: 1.5,
+});
+
+var cube = new Zdog.Group({
+  addTo: illo,
+  rotate: {
+    y: 0.96,
+    z: Math.PI/4
+  }
+});
+
+var front = new Zdog.Rect({
+  addTo: cube,
+  width: 100,
+  height: 100,
+  stroke: 20,
+  color: strokecolor,
+  translate: {z: 50},
+  //backface: false,
+});
+
+var bottom = front.copy({
+  translate: {y:50},
+  rotate: {x: Math.PI/2},
+});
+
+var tippy = new Zdog.Rect({
+  addTo: cube,
+  width: 100,
+  height: 100,
+  stroke: 20,
+  color: strokecolor,
+  translate: {y: -50},
+  rotate: {x: Math.PI/2},
+});
+
+var back = front.copy({
+  translate: {z: -50}
+});
+
+var hex = new Zdog.Group({
+  addTo: illo
+})
+
+var outer = new Zdog.Polygon({
+  addTo: hex,
+  radius: 50*1.636,
+  sides: 6,
+  stroke: 20,
+  color: strokecolor,
+  rotate: {z: Math.PI/6}
+});
+
+var horiz = new Zdog.Shape({
+  addTo: hex,
+  color: strokecolor,
+  stroke: 20,
+  path: [{ x: -50*1.636 }, { x: 50*1.636 }],
+})
+
+var forsla = horiz.copy({rotate: {z: Math.PI/3}})
+
+var baksla = horiz.copy({rotate: {z: 2*Math.PI/3}})
+
+function animate() {
+  if (illo.rotate.y < Math.PI) {
+    outer.stroke = 0
+    horiz.stroke = 0
+    forsla.stroke = 0
+    baksla.stroke = 0
+    front.stroke = 20
+    bottom.stroke = 20
+    tippy.stroke = 20
+    back.stroke = 20
+    illo.rotate.y += 0.025
+  } else if (illo.rotate.y < 2*Math.PI){
+    outer.stroke = 20
+    horiz.stroke = 20
+    forsla.stroke = 20
+    baksla.stroke = 20
+    tippy.stroke = 0
+    front.stroke = 0
+    bottom.stroke = 0
+    back.stroke = 0
+    illo.rotate.y += 0.02
+  } else {
+    illo.rotate.y -= 2*Math.PI
+  }
+  illo.rotate.z += 0.017
+  illo.rotate.x = 0
+  illo.updateRenderGraph();
+  requestAnimationFrame( animate );
+}
+
+animate();
+</script>
